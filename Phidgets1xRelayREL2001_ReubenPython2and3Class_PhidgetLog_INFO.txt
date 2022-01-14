@@ -1,0 +1,20 @@
+2022-01-13T18:09:13  <Info> phidget22 : 
+	******************************  Logging Enabled  ******************************
+	* Phidget22 - Version 1.7 - Built Jul  6 2021 09:30:26                        *
+	* Release 1.7.20210706 - Windows (64-bit)                                     *
+	*******************************************************************************
+2022-01-13T18:09:28  <Info> phidget22[PhidgetUSBReadThreadFunction()] : HUB0000 (6-Port USB VINT Hub Phidget) v127 S/N:634222: ReadThread exiting normally (signaled by Phidget_close)
+2022-01-13T18:09:28  <Info> phidget22usb[PhidgetUSBCloseHandle()] : Closing USB Device: 0x73c
+2022-01-13T18:09:28  <Info> phidget22[deviceDetach()] : DCC1100 (Brushless DC Motor Phidget) v121 -> HUB0000 Port:1 S/N:634222
+2022-01-13T18:09:28  <Info> phidget22[deviceDetach()] : DCC1100 (Brushless DC Motor Phidget) v121 -> HUB0000 Port:0 S/N:634222
+2022-01-13T18:09:28  <Info> phidget22[deviceDetach()] : HUB0000 (6-Port USB VINT Hub Phidget) v127 S/N:634222
+2022-01-13T18:09:36  <Info> phidget22 : 
+	******************************  Logging Enabled  ******************************
+	* Phidget22 - Version 1.7 - Built Jul  6 2021 09:30:26                        *
+	* Release 1.7.20210706 - Windows (64-bit)                                     *
+	*******************************************************************************
+2022-01-13T18:17:14  <Info> phidget22 : 
+	******************************  Logging Enabled  ******************************
+	* Phidget22 - Version 1.7 - Built Jul  6 2021 09:30:26                        *
+	* Release 1.7.20210706 - Windows (64-bit)                                     *
+	*******************************************************************************
