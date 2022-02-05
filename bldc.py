@@ -353,10 +353,10 @@ if __name__ == '__main__':
                             ("WaitForAttached_TimeoutDuration_Milliseconds", 5000),
                             ("user_set_name", "Reuben's Test BLDC Controller"),
                             ("VINT_DesiredSerialNumber", 634222), #CHANGE THIS TO MATCH YOUR UNIQUE VINT
-                            ("VINT_DesiredPortNumber", 0), #CHANGE THIS TO MATCH YOUR UNIQUE VINT
+                            ("VINT_DesiredPortNumber", 1), #CHANGE THIS TO MATCH YOUR UNIQUE VINT
                             ("DesiredDeviceID", 108),
                             ("NameToDisplay_UserSet", "Reuben's Test BLDC Controller"),
-                            ("ENABLE_GETS_MAINTHREAD", 1),
+                            ("ENABLE_GETS_MAINTHREAD", 0),
                             ("FailsafeTime_Milliseconds", 10000),
                             ("MainThread_TimeToSleepEachLoop", 0.001),
                             ("ControlMode", "position"),  #position or velocity, AFTER SWITCHING ControlMode, YOU SOMETIMES NEED TO RUN PYTHON FILE ONCE AND THEN POWER-CYCLE BOARD FOR EFFECT TO TAKE
