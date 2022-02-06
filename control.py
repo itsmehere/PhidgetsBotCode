@@ -14,6 +14,7 @@ Verified working on: Python 2.7, 3.8 for Windows 8.1, 10 64-bit and Raspberry Pi
 __author__ = 'reuben.brewer'
 
 from PhidgetBrushlessDCmotorDCC1100controller_ReubenPython2and3Class import *
+from Phidgets1xRelayREL2001_ReubenPython2and3Class import *
 from MyPrint_ReubenPython2and3Class import *
 import keyboard
 
@@ -78,6 +79,10 @@ def GUI_update_clock():
     global BLDC_OPEN_FLAG_Right0
     global SHOW_IN_GUI_BLDC_FLAG_Right0
 
+    global Phidgets1xRelayREL2001_ReubenPython2and3ClassObject
+    global RELAY_OPEN_FLAG
+    global SHOW_IN_GUI_RELAY_FLAG
+
     global MyPrint_ReubenPython2and3ClassObject
     global MYPRINT_OPEN_FLAG
     global SHOW_IN_GUI_MYPRINT_FLAG
@@ -95,6 +100,11 @@ def GUI_update_clock():
             #########################################################
             if BLDC_OPEN_FLAG_Right0 == 1 and SHOW_IN_GUI_BLDC_FLAG_Right0 == 1:
                 PhidgetBrushlessDCmotorDCC1100controller_ReubenPython2and3ClassObject_Right0.GUI_update_clock()
+            #########################################################
+
+            #########################################################
+            if RELAY_OPEN_FLAG == 1 and SHOW_IN_GUI_RELAY_FLAG == 1:
+                Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.GUI_update_clock()
             #########################################################
 
             #########################################################
@@ -122,6 +132,9 @@ def ExitProgram_Callback():
     global PhidgetBrushlessDCmotorDCC1100controller_ReubenPython2and3ClassObject_Right0
     global BLDC_OPEN_FLAG_Right0
 
+    global Phidgets1xRelayREL2001_ReubenPython2and3ClassObject
+    global RELAY_OPEN_FLAG
+
     global MyPrint_ReubenPython2and3ClassObject
     global MYPRINT_OPEN_FLAG
 
@@ -137,6 +150,11 @@ def ExitProgram_Callback():
     #########################################################
     if BLDC_OPEN_FLAG_Right0 == 1:
         PhidgetBrushlessDCmotorDCC1100controller_ReubenPython2and3ClassObject_Right0.ExitProgram_Callback()
+    #########################################################
+
+    #########################################################
+    if RELAY_OPEN_FLAG == 1:
+        Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.ExitProgram_Callback()
     #########################################################
 
     #########################################################
@@ -233,6 +251,17 @@ if __name__ == '__main__':
     global USE_BLDC_SINUSOIDAL_INPUT_FLAG_Right0
     USE_BLDC_SINUSOIDAL_INPUT_FLAG_Right0 = 1
 
+    # --- RELAY ---
+
+    global USE_RELAY_FLAG
+    USE_RELAY_FLAG = 1
+
+    global USE_CycleThroughRelayStatesForTesting_FLAG
+    USE_CycleThroughRelayStatesForTesting_FLAG = 1
+
+    global SHOW_IN_GUI_RELAY_FLAG
+    SHOW_IN_GUI_RELAY_FLAG = 1
+
     #################################################
     #################################################
 
@@ -256,6 +285,8 @@ if __name__ == '__main__':
 
     #################################################
     #################################################
+    # --- LEFT MOTOR ---
+
     global GUI_ROW_BLDC_Left1
     global GUI_COLUMN_BLDC_Left1
     global GUI_PADX_BLDC_Left1
@@ -270,6 +301,8 @@ if __name__ == '__main__':
     GUI_ROWSPAN_BLDC_Left1 = 1
     GUI_COLUMNSPAN_BLDC_Left1 = 1
 
+    # --- RIGHT MOTOR ---
+
     global GUI_ROW_BLDC_Right0
     global GUI_COLUMN_BLDC_Right0
     global GUI_PADX_BLDC_Right0
@@ -283,6 +316,22 @@ if __name__ == '__main__':
     GUI_PADY_BLDC_Right0 = 10
     GUI_ROWSPAN_BLDC_Right0 = 1
     GUI_COLUMNSPAN_BLDC_Right0 = 1
+
+    # --- RELAY ---
+
+    global GUI_ROW_RELAYS
+    global GUI_COLUMN_RELAYS
+    global GUI_PADX_RELAYS
+    global GUI_PADY_RELAYS
+    global GUI_ROWSPAN_RELAYS
+    global GUI_COLUMNSPAN_RELAYS
+    GUI_ROW_RELAYS = 1
+
+    GUI_COLUMN_RELAYS = 0
+    GUI_PADX_RELAYS = 1
+    GUI_PADY_RELAYS = 10
+    GUI_ROWSPAN_RELAYS = 1
+    GUI_COLUMNSPAN_RELAYS = 1
 
     global GUI_ROW_MYPRINT
     global GUI_COLUMN_MYPRINT
@@ -318,6 +367,10 @@ if __name__ == '__main__':
     global BLDC_OPEN_FLAG_Right0
     BLDC_OPEN_FLAG_Right0 = -1
 
+    global Phidgets1xRelayREL2001_ReubenPython2and3ClassObject
+    global RELAY_OPEN_FLAG
+    RELAY_OPEN_FLAG = -1
+
     global MyPrint_ReubenPython2and3ClassObject
 
     global MYPRINT_OPEN_FLAG
@@ -328,6 +381,15 @@ if __name__ == '__main__':
 
     global StartingTime_MainLoopThread
     StartingTime_MainLoopThread = -11111.0
+
+    global CycleThroughRelayStatesForTesting_TimeBetweenStateFlips
+    CycleThroughRelayStatesForTesting_TimeBetweenStateFlips = 1.0
+
+    global CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread
+    CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread = -11111.0
+
+    global CycleThroughRelayStatesForTesting_RelayStateToBeSet
+    CycleThroughRelayStatesForTesting_RelayStateToBeSet = 1
 
     # -------------------------- LEFT MOTOR --------------------------
 
@@ -576,6 +638,51 @@ if __name__ == '__main__':
                             ("RescaleFactor_MultipliesPhidgetsUnits_UserSet", 1.0),
                             ("UpdateDeltaT_ms", 100)]) #100 min for velocity, 20 min for position
     #################################################
+    global RELAY_MostRecentDict
+
+    global RELAY_MostRecentDict_DigitalOutputsList_State
+    RELAY_MostRecentDict_DigitalOutputsList_State = [-1]*1
+
+    global RELAY_MostRecentDict_DigitalOutputsList_ErrorCallbackFiredFlag
+    RELAY_MostRecentDict_DigitalOutputsList_ErrorCallbackFiredFlag = [-1]*1
+
+    global RELAY_MostRecentDict_Time
+    RELAY_MostRecentDict_Time = -11111.0
+
+    global Phidgets1xRelayREL2001_ReubenPython2and3ClassObject_GUIparametersDict
+    Phidgets1xRelayREL2001_ReubenPython2and3ClassObject_GUIparametersDict = dict([("USE_GUI_FLAG", USE_GUI_FLAG and SHOW_IN_GUI_RELAY_FLAG),
+                                    ("root", root),
+                                    ("EnableInternal_MyPrint_Flag", 1),
+                                    ("NumberOfPrintLines", 10),
+                                    ("UseBorderAroundThisGuiObjectFlag", 0),
+                                    ("GUI_ROW", GUI_ROW_RELAYS),
+                                    ("GUI_COLUMN", GUI_COLUMN_RELAYS),
+                                    ("GUI_PADX", GUI_PADX_RELAYS),
+                                    ("GUI_PADY", GUI_PADY_RELAYS),
+                                    ("GUI_ROWSPAN", GUI_ROWSPAN_RELAYS),
+                                    ("GUI_COLUMNSPAN", GUI_COLUMNSPAN_RELAYS)])
+
+    global Phidgets1xRelayREL2001_ReubenPython2and3ClassObject_setup_dict
+    Phidgets1xRelayREL2001_ReubenPython2and3ClassObject_setup_dict = dict([("GUIparametersDict", Phidgets1xRelayREL2001_ReubenPython2and3ClassObject_GUIparametersDict),
+                                                                           ("VINT_DesiredSerialNumber", 634222), #CHANGE THIS TO MATCH YOUR UNIQUE VINT
+                                                                           ("VINT_DesiredPortNumber", 5), #CHANGE THIS TO MATCH YOUR UNIQUE VINT
+                                                                           ("DesiredDeviceID", 96),
+                                                                           ("WaitForAttached_TimeoutDuration_Milliseconds", 5000),
+                                                                           ("NameToDisplay_UserSet", "Reuben's Test 1xRelay REL2001_0"),
+                                                                           ("UsePhidgetsLoggingInternalToThisClassObjectFlag", 1),
+                                                                           ("MainThread_TimeToSleepEachLoop", 0.002)])
+
+    if USE_RELAY_FLAG == 1:
+        try:
+            Phidgets1xRelayREL2001_ReubenPython2and3ClassObject = Phidgets1xRelayREL2001_ReubenPython2and3Class(Phidgets1xRelayREL2001_ReubenPython2and3ClassObject_setup_dict)
+            time.sleep(0.25)
+            RELAY_OPEN_FLAG = Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.OBJECT_CREATED_SUCCESSFULLY_FLAG
+
+        except:
+            exceptions = sys.exc_info()[0]
+            print("Phidgets1xRelayREL2001_ReubenPython2and3ClassObject __init__: Exceptions: %s" % exceptions, 0)
+            traceback.print_exc()
+    #################################################
 
     if USE_BLDC_FLAG_Left1 == 1:
         try:
@@ -658,6 +765,15 @@ if __name__ == '__main__':
     #################################################
     if USE_BLDC_FLAG_Right0 == 1 and BLDC_OPEN_FLAG_Right0 != 1:
         print("Failed to open PhidgetBrushlessDCmotorDCC1100controller_ReubenPython2and3Class (Right Motor).")
+        input("Press any key (and enter) to exit.")
+        sys.exit()
+    #################################################
+    #################################################
+
+    #################################################
+    #################################################
+    if USE_RELAY_FLAG == 1 and RELAY_OPEN_FLAG != 1:
+        print("Failed to open Phidgets1xRelayREL2001_ReubenPython2and3Class.")
         input("Press any key (and enter) to exit.")
         sys.exit()
     #################################################
@@ -753,6 +869,35 @@ if __name__ == '__main__':
                 # Stop
                 PhidgetBrushlessDCmotorDCC1100controller_ReubenPython2and3ClassObject_Right0.CommandMotorFromExternalProgram_VelocityControl(0)
         
+        ###################################################
+        if USE_RELAY_FLAG == 1:
+
+            ##################### SET's
+            if USE_CycleThroughRelayStatesForTesting_FLAG == 1:
+                if CurrentTime_MainLoopThread - CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread >= CycleThroughRelayStatesForTesting_TimeBetweenStateFlips:
+                    Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.SetRelayState(CycleThroughRelayStatesForTesting_RelayStateToBeSet)
+                    CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread = CurrentTime_MainLoopThread
+                    print("CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread: " + str(CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread))
+
+                    if CycleThroughRelayStatesForTesting_RelayStateToBeSet == 0:
+                        CycleThroughRelayStatesForTesting_RelayStateToBeSet = 1
+                    else:
+                        CycleThroughRelayStatesForTesting_RelayStateToBeSet = 0
+
+            #####################
+
+            ##################### GET's
+            RELAY_MostRecentDict = Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.GetMostRecentDataDict()
+
+            if "Time" in RELAY_MostRecentDict:
+                RELAY_MostRecentDict_DigitalOutputsList_State = RELAY_MostRecentDict["DigitalOutputsList_State"]
+                RELAY_MostRecentDict_DigitalOutputsList_ErrorCallbackFiredFlag = RELAY_MostRecentDict["DigitalOutputsList_ErrorCallbackFiredFlag"]
+                RELAY_MostRecentDict_Time = RELAY_MostRecentDict["Time"]
+
+                #print("RELAY_MostRecentDict_DigitalOutputsList_State: " + str(RELAY_MostRecentDict_DigitalOutputsList_State))
+            #####################
+
+        ###################################################
         time.sleep(0.010)
         ###################################################
 
