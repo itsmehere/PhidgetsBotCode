@@ -309,7 +309,7 @@ if __name__ == '__main__':
     global GUI_PADY_BLDC_Right0
     global GUI_ROWSPAN_BLDC_Right0
     global GUI_COLUMNSPAN_BLDC_Right0
-    GUI_ROW_BLDC_Right0 = 1
+    GUI_ROW_BLDC_Right0 = 2
 
     GUI_COLUMN_BLDC_Right0 = 0
     GUI_PADX_BLDC_Right0 = 1
@@ -325,7 +325,7 @@ if __name__ == '__main__':
     global GUI_PADY_RELAYS
     global GUI_ROWSPAN_RELAYS
     global GUI_COLUMNSPAN_RELAYS
-    GUI_ROW_RELAYS = 1
+    GUI_ROW_RELAYS = 0
 
     GUI_COLUMN_RELAYS = 0
     GUI_PADX_RELAYS = 1
@@ -874,16 +874,12 @@ if __name__ == '__main__':
 
             ##################### SET's
             if USE_CycleThroughRelayStatesForTesting_FLAG == 1:
-                if CurrentTime_MainLoopThread - CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread >= CycleThroughRelayStatesForTesting_TimeBetweenStateFlips:
-                    Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.SetRelayState(CycleThroughRelayStatesForTesting_RelayStateToBeSet)
-                    CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread = CurrentTime_MainLoopThread
-                    print("CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread: " + str(CycleThroughRelayStatesForTesting_LastTimeOfStateFlip_MainLoopThread))
-
-                    if CycleThroughRelayStatesForTesting_RelayStateToBeSet == 0:
-                        CycleThroughRelayStatesForTesting_RelayStateToBeSet = 1
-                    else:
-                        CycleThroughRelayStatesForTesting_RelayStateToBeSet = 0
-
+                if keyboard.is_pressed('j'):
+                    # Start Relay
+                    Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.SetRelayState(1)
+                else:
+                    # Stop Relay
+                    Phidgets1xRelayREL2001_ReubenPython2and3ClassObject.SetRelayState(0)
             #####################
 
             ##################### GET's
